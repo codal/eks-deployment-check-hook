@@ -17,7 +17,7 @@ jobs:
     steps:
       # --- #
       - name: Build and push CONTAINER_NAME
-        uses: yashpandya-codal/eks-deployment-check-hook@main
+        uses: codal/eks-deployment-check-hook@main
         with:
           aws_access_key_id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
@@ -47,7 +47,7 @@ jobs:
           aws-region: ${{ env.aws_region }}
       # --- #
       - name: Build and push deployment-check
-        uses: yashpandya-codal/eks-deployment-check-hook@main
+        uses: codal/eks-deployment-check-hook@main
         with:
           cluster_name: ${{ secrets.CLUSTER_NAME }}
           namespace: ${{ secrets.NAMESPACE }}
@@ -69,7 +69,7 @@ jobs:
       # --- #
       - name: Build and push deployment-check
         id: deploycheckhook
-        uses: yashpandya-codal/eks-deployment-check-hook@main
+        uses: codal/eks-deployment-check-hook@main
         with:
           aws_access_key_id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
