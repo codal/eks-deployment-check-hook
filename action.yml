@@ -20,6 +20,9 @@ inputs:
   cluster_name:
     description: The cluster name
     required: true
+  eks_role_arn:
+      description: EKS role arn that allow access eks cluster (Mostly happen when you create your cluster with CDK).
+      required: false
   namespace:
     description: The cluster namespace
     required: true
