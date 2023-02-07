@@ -40,7 +40,7 @@ function deploymentcheck(){
   echo "is it running ? $isnewberunning"
   count=0
   while [ "$isnewberunning" != "true true" ]; do
-     if [ "$count" = "20" ]; then
+     if [ "$count" = "30" ]; then
          exit 1;
      fi
      sleep 10;
