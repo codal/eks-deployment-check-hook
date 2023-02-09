@@ -43,7 +43,7 @@ function deploymentcheck(){
      if [ "$count" = "30" ]; then
          exit 1;
      fi
-     sleep 10;
+     sleep 15;
      count=$((count+1))
      echo "BE running checking : $count times"
      isnewberunning=$(kubectl get pods -n $INPUT_NAMESPACE -l "app.kubernetes.io/name=$INPUT_APP_NAME" -o jsonpath='{.items[*].status.containerStatuses[0].ready}')
