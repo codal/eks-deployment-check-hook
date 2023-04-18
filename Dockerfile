@@ -4,8 +4,6 @@ LABEL maintainer="Yash Pandya <ypandya@codal.com>"
 
 ENV PYTHONIOENCODING=UTF-8
 
-WORKDIR /app
-
 RUN apk add --no-cache curl
 
 RUN apk add --no-cache bash
@@ -18,8 +16,8 @@ RUN chmod +x ./kubectl
 
 RUN mv ./kubectl /usr/local/bin/kubectl
 
-COPY . .
+ADD entrypoint.sh /entrypoint.sh
 
-RUN chmod +x entrypoint.sh
+RUN chmod +x /entrypoint.sh
 
-ENTRYPOINT ["bash", "entrypoint.sh"]
+ENTRYPOINT ["bash", "/entrypoint.sh"]
