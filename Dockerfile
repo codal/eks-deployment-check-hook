@@ -6,6 +6,8 @@ ENV PYTHONIOENCODING=UTF-8
 
 RUN apk add --no-cache curl
 
+RUN apk add --no-cache bash
+
 RUN pip install awscli
 RUN curl -LO https://storage.googleapis.com/kubernetes-release/release/`curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt`/bin/linux/amd64/kubectl
 RUN chmod +x ./kubectl
@@ -15,4 +17,4 @@ ADD entrypoint.sh /entrypoint.sh
 
 RUN chmod +x /entrypoint.sh
 
-ENTRYPOINT ["/entrypoint.sh"]
+ENTRYPOINT ["bash", "entrypoint.sh"]
