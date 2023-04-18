@@ -35,6 +35,41 @@ fi
 
 debug "Starting kubectl collecting output"
 
+# cleaning up jobs and pods
+function cleanup(){
+  initJobs=()
+  for jobname in $jobs
+  do
+    if echo "$jobname" | grep -q $prefix; then
+      initJobs+=($jobname)
+    fi
+  done
+  for (( idx=0 ; idx<${#initJobs[@]}-$count; idx++ )) ; do
+    echo ${initJobs[idx]}
+    # delete job
+    kubectl delete job ${initJobs[idx]} -n $INPUT_NAMESPACE
+    pod=$(kubectl get pod -n $INPUT_NAMESPACE -l job-name=${initJobs[idx]} --output=jsonpath='{.items[*].metadata.name}')
+    if [ -z "${pod}" ]; then
+      echo $pod
+      # delete pod
+      kubectl delete pod $pod -n flexport
+    fi
+  done
+}
+
+# delete failed jobs
+jobs=$(kubectl get jobs -n $INPUT_NAMESPACE --field-selector status.successful=0 --output=jsonpath='{.items[*].metadata.name}')
+count=0
+prefix="^"
+cleanup $jobs $count $prefix
+
+# keep recent 3 jobs remove rest
+jobs=$(kubectl get jobs -n $INPUT_NAMESPACE --sort-by=.metadata.creationTimestamp --output=jsonpath='{.items[*].metadata.name}')
+count=3
+prefix="^$INPUT_NAMESPACE"
+cleanup $jobs $count $prefix
+
+# deplyment verification
 function deploymentcheck(){
   isnewberunning="false"
   echo "is it running ? $isnewberunning"
