@@ -37,7 +37,7 @@ debug "Starting kubectl collecting output"
 
 # cleaning up jobs and pods
 function cleanup(){
-  declare -a initJobs=()
+  initJobs=()
   for jobname in $jobs
   do
     if echo "$jobname" | grep -q $prefix; then
