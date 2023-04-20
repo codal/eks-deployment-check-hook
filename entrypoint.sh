@@ -53,7 +53,7 @@ function cleanup(){
     # delete job
     kubectl delete job ${initJobs[idx]} -n $INPUT_NAMESPACE
     # delete pod
-    kubectl delete pod $pod -n flexport
+    # kubectl delete pod $pod -n flexport
   done
 }
 
