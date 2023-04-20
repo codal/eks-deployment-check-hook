@@ -63,9 +63,9 @@ function cleanup(){
 # prefix="^"
 # cleanup $jobs $count $prefix
 
-# keep recent 3 jobs remove rest
+# keep recent 4 jobs remove rest
 jobs=$(kubectl get jobs -n $INPUT_NAMESPACE --sort-by=.metadata.creationTimestamp --output=jsonpath='{.items[*].metadata.name}')
-count=3
+count=4
 prefix="^$INPUT_NAMESPACE"
 cleanup $jobs $count $prefix
 
