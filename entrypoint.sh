@@ -57,18 +57,6 @@ function cleanup(){
   done
 }
 
-# delete failed jobs
-# jobs=$(kubectl get jobs -n $INPUT_NAMESPACE --field-selector status.successful=0 --output=jsonpath='{.items[*].metadata.name}')
-# count=0
-# prefix="^"
-# cleanup $jobs $count $prefix
-
-# keep recent 3 jobs remove rest
-jobs=$(kubectl get jobs -n $INPUT_NAMESPACE --sort-by=.metadata.creationTimestamp --output=jsonpath='{.items[*].metadata.name}')
-count=3
-prefix="^$INPUT_NAMESPACE"
-cleanup $jobs $count $prefix
-
 # deplyment verification
 function deploymentcheck(){
   isnewberunning="false"
@@ -86,16 +74,50 @@ function deploymentcheck(){
   done
 }
 
-output=$( deploymentcheck )
+if [ -n "${JOB_NAME}" ]; then
+  jobs=$(kubectl get jobs $JOB_NAME -n $INPUT_NAMESPACE --output=jsonpath='{.metadata.name}') || echo "cleanup"
+  count=0
+  prefix="^"
+  cleanup $jobs $count $prefix
+  
+  debug "${output}"
 
-debug "${output}"
+  if [ -n "${GITHUB_OUTPUT:-}" ]; then
+    delimiter=$(mktemp -u XXXXXX)
 
-if [ -n "${GITHUB_OUTPUT:-}" ]; then
-  delimiter=$(mktemp -u XXXXXX)
+    echo "deployment-check-out<<${delimiter}" >> $GITHUB_OUTPUT
+    echo "${output}" >> $GITHUB_OUTPUT
+    echo "${delimiter}" >> $GITHUB_OUTPUT
+  else
+    echo ::set-output name=deployment-check-out::"${output}"
+  fi
+  exit 0
+else 
+  # delete failed jobs
+  jobs=$(kubectl get jobs -n $INPUT_NAMESPACE --field-selector status.successful=0 --output=jsonpath='{.items[*].metadata.name}')
+  count=0
+  prefix="^"
+  cleanup $jobs $count $prefix
 
-  echo "deployment-check-out<<${delimiter}" >> $GITHUB_OUTPUT
-  echo "${output}" >> $GITHUB_OUTPUT
-  echo "${delimiter}" >> $GITHUB_OUTPUT
-else
-  echo ::set-output name=deployment-check-out::"${output}"
+  # keep recent 3 jobs remove rest
+
+  jobs=$(kubectl get jobs -n $INPUT_NAMESPACE --sort-by=.metadata.creationTimestamp --output=jsonpath='{.items[*].metadata.name}')
+  count=3
+  prefix="^$INPUT_NAMESPACE"
+  cleanup $jobs $count $prefix
+
+  output=$( deploymentcheck )
+
+  debug "${output}"
+
+  if [ -n "${GITHUB_OUTPUT:-}" ]; then
+    delimiter=$(mktemp -u XXXXXX)
+
+    echo "deployment-check-out<<${delimiter}" >> $GITHUB_OUTPUT
+    echo "${output}" >> $GITHUB_OUTPUT
+    echo "${delimiter}" >> $GITHUB_OUTPUT
+  else
+    echo ::set-output name=deployment-check-out::"${output}"
+  fi
+
 fi

@@ -26,6 +26,9 @@ inputs:
   namespace:
     description: The cluster namespace
     required: true
+  job_name:
+    description: Init job name
+    required: false
   app_name:
     description: The app name within cluster namespace
     required: true
