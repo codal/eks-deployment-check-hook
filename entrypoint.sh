@@ -58,10 +58,10 @@ function cleanup(){
 }
 
 # delete failed jobs
-jobs=$(kubectl get jobs -n $INPUT_NAMESPACE --field-selector status.successful=0 --output=jsonpath='{.items[*].metadata.name}')
-count=0
-prefix="^"
-cleanup $jobs $count $prefix
+# jobs=$(kubectl get jobs -n $INPUT_NAMESPACE --field-selector status.successful=0 --output=jsonpath='{.items[*].metadata.name}')
+# count=0
+# prefix="^"
+# cleanup $jobs $count $prefix
 
 # keep recent 3 jobs remove rest
 jobs=$(kubectl get jobs -n $INPUT_NAMESPACE --sort-by=.metadata.creationTimestamp --output=jsonpath='{.items[*].metadata.name}')
