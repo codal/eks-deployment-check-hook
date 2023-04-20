@@ -45,15 +45,15 @@ function cleanup(){
     fi
   done
   for (( idx=0 ; idx<${#initJobs[@]}-$count; idx++ )) ; do
+    echo "---Job---"
     echo ${initJobs[idx]}
     # delete job
     kubectl delete job ${initJobs[idx]} -n $INPUT_NAMESPACE
     pod=$(kubectl get pod -n $INPUT_NAMESPACE -l job-name=${initJobs[idx]} --output=jsonpath='{.items[*].metadata.name}')
-    if [ -z "${pod}" ]; then
-      echo $pod
-      # delete pod
-      kubectl delete pod $pod -n flexport
-    fi
+    echo "---Pod---"
+    echo $pod
+    # delete pod
+    kubectl delete pod $pod -n flexport
   done
 }
 
