@@ -74,7 +74,7 @@ function deploymentcheck(){
   isnewberunning="false"
   echo "is it running ? $isnewberunning"
   count=0
-  while [[ $isnewberunning = *false* ]]; do
+  while [ "$isnewberunning" != "true true true" ]; do
      # Give the deployment 5 minutes to be ready.
      if [ "$count" = "300" ]; then
          exit 1;
