@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 set -euo pipefail
 IFS=$(printf ' \n\t')
@@ -74,7 +74,7 @@ function deploymentcheck(){
   isnewberunning="false"
   echo "is it running ? $isnewberunning"
   count=0
-  while [["$isnewberunning" == *"false"* ]]; do
+  while [[ $isnewberunning = *false* ]]; do
      # Give the deployment 5 minutes to be ready.
      if [ "$count" = "300" ]; then
          exit 1;
